@@ -1,0 +1,3 @@
+# TRABAJO POR SEBASTIAN DUQUE SEPULVEDA, SEBASTIAN GOMEZ, ABDI DANIEL ESCOBAR
+
+Manejo de MongoDB e implementacion de migracion, MVC, GUI y ODM
