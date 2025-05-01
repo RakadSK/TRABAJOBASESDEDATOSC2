@@ -1,0 +1,125 @@
+**************************** DESCRIPCIÓN GENERAL DEL PROYECTO ************************
+
+Esta aplicación de escritorio está desarrollada en Python utilizando el framework PyQt5
+para la construcción de interfaces gráficas de usuario (GUI) y MongoDB como sistema de 
+gestión de bases de datos NoSQL. Su objetivo principal es proporcionar una herramienta 
+interactiva y visual para la gestión de datos relacionados con seis entidades: categorías,
+comentarios, etiquetas, posts, usuarios y posts etiquetados.
+
+La arquitectura del proyecto sigue el patrón Modelo-Vista-Controlador (MVC), que divide 
+la lógica en tres componentes principales para mejorar la organización del código y 
+facilitar su mantenimiento:
+
+# Modelo (DAO/VO): Encapsula la lógica de acceso a datos y define los objetos de valor 
+que representan las entidades gestionadas.
+
+Vista (vista.py): Implementa la interfaz gráfica utilizando PyQt5, organizada en secciones
+ visuales que permiten al usuario interactuar con cada entidad.
+
+Controlador (controlador.py): Coordina la interacción entre la vista y el modelo, 
+capturando eventos del usuario y gestionando operaciones CRUD sobre la base de datos.
+
+
+
+*****************************************************************************************
+****************************   DEPENDENCIAS Y REQUISITOS   ******************************
+*****************************************************************************************
+
+# SE DEBE CONTAR CON LAS SIGUIENTES DEPENDENCIAS INSTALADAS 
+
+	Python 3.8 o superior
+
+	PyQt5
+
+	pymongo
+
+	python-dotenv
+	
+
+	
+*****************************************************************************************
+****************************   INSTALACION   *******************************************
+*****************************************************************************************
+
+# Clonar el repositorio o copiar los archivos.
+# Instalar dependencias
+
+
+*****************************************************************************************
+****************************   main.py   *******************************************
+*****************************************************************************************
+
+El archivo main.py es el punto de entrada de la aplicación y está diseñado para iniciar la 
+interfaz gráfica de usuario. Primero importa el módulo controlador, luego verifica si el 
+programa se está ejecutando directamente. Define una variable parametros_cmd con el valor 
+'gui', y si este valor coincide, crea una instancia de la clase ControladorGUI, llama a 
+su método mainloop() para iniciar la interfaz gráfica y finaliza el programa correctamente 
+con sys.exit(0); en caso contrario, finaliza con un código de error 1.
+
+
+*****************************************************************************************
+****************************   conexiondb.py   *******************************************
+*****************************************************************************************
+
+
+El archivo conexiondb.py se encarga de establecer la conexión con la base de datos MongoDB 
+utilizando la biblioteca pymongo. Define la contraseña directamente desde una variable y 
+construye la cadena de conexión con ella. La función conectar_cliente() intenta crear 
+una instancia de MongoClient para conectarse a la base de datos; si la conexión es 
+exitosa, imprime un mensaje de confirmación, y si falla, muestra un mensaje de error.
+ Finalmente, retorna el objeto cliente, ya sea conectado o None en caso de error.
+
+
+*****************************************************************************************
+****************************   vista.py   *******************************************
+*****************************************************************************************
+
+
+El archivo define la clase VistaPrincipal, que representa la interfaz gráfica principal de 
+la aplicación usando PyQt5. Esta ventana está organizada en tres secciones principales que 
+corresponden a las entidades gestionadas por la base de datos: categorías y comentarios, 
+etiquetas y posts, y posts etiquetados y usuarios. Para cada entidad, se crean dinámicamente
+ campos de entrada (QLineEdit), botones de acción (QPushButton) como crear, actualizar, 
+ buscar, eliminar y mostrar, y tablas (QTableWidget) para visualizar los datos. Aunque el 
+ contenido de cada sección varía según la entidad, la estructura general se repite: entradas 
+ de datos, botones de gestión y una tabla de resultados. Todos los widgets se agrupan en 
+ iccionarios (w1, w2, w3) para facilitar su acceso, y luego se organizan visualmente en 
+ n diseño de columnas usando QVBoxLayout y QHBoxLayout. Finalmente, estos layouts se colocan 
+ dentro de un widget central que se establece como contenido principal de la ventana.
+
+*****************************************************************************************
+****************************   modelo   *******************************************
+*****************************************************************************************
+
+
+Los archivos dentro del directorio VO (Value Object) definen clases de datos con atributos 
+opcionales que representan entidades del dominio (como categorías, comentarios, etiquetas, etc.). 
+Estas clases sirven como contenedores estructurados para intercambiar datos entre capas de la 
+aplicación. Por su parte, los archivos en el directorio DAO (Data Access Object) encapsulan 
+la lógica necesaria para interactuar con la base de datos MongoDB, proporcionando métodos 
+estándar para crear, leer, actualizar y eliminar registros asociados a cada entidad. Esta 
+separación promueve una arquitectura limpia y modular, facilitando el mantenimiento y 
+escalabilidad del sistema.
+
+*****************************************************************************************
+****************************   controlador.py   *******************************************
+*****************************************************************************************
+
+
+El controlador ControladorGUI actúa como intermediario entre la vista y los modelos de datos 
+(DAO y VO), y se encarga de gestionar toda la lógica de interacción del usuario con la interfaz gráfica. 
+Inicializa la aplicación PyQt5 y la ventana principal, conecta los botones de la vista con sus respectivos 
+métodos de manejo de eventos y gestiona las operaciones CRUD (Crear, Leer, Actualizar, Eliminar) para seis 
+entidades: categorías, comentarios, etiquetas, posts, usuarios y posts etiquetados. Cada handler 
+(handler_insertar_, handler_leer_, handler_actualizar_, handler_eliminar_, handler_buscar_) 
+recoge datos desde los formularios de entrada, los convierte en objetos VO y llama a los métodos 
+del DAO correspondiente para realizar la operación en la base de datos. 
+
+
+
+
+
+
+
+
+
