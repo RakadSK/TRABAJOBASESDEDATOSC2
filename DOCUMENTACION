@@ -115,6 +115,64 @@ entidades: categorías, comentarios, etiquetas, posts, usuarios y posts etiqueta
 recoge datos desde los formularios de entrada, los convierte en objetos VO y llama a los métodos 
 del DAO correspondiente para realizar la operación en la base de datos. 
 
+*****************************************************************************************
+******************   Migración de modelo relacional a MongoDB   *************************
+*****************************************************************************************
+
+Durante el desarrollo del presente proyecto, se llevó a cabo la migración desde un modelo relacional tradicional, 
+basado en tablas y claves foráneas, hacia un modelo documental utilizando MongoDB como sistema de gestión de bases 
+de datos NoSQL. 
+Esta transición respondió a la necesidad de contar con una arquitectura más flexible y adaptada al manejo de grandes
+volúmenes de datos semiestructurados, propios de una aplicación centrada en publicaciones y usuarios.
+Estructura original en SQL
+El diseño relacional contemplaba las siguientes entidades principales:
+
+- Usuarios
+- Posts
+- Categorías
+- Comentarios
+- Etiquetas
+- PostsEtiquetados (tabla intermedia para representar la relación muchos a muchos entre posts y etiquetas)
+
+Cada una de estas entidades se representaba mediante una tabla con relaciones estrictas basadas en claves 
+primarias y foráneas, lo cual favorecía la integridad referencial pero implicaba operaciones costosas de unión
+(JOIN) para consultas complejas.
+Transformación al modelo NoSQL
+En el proceso de migración, se aplicaron principios de desnormalización y embebido de documentos, características 
+clave del modelo documental de MongoDB. A continuación, se detallan las principales transformaciones:
+- Usuarios, Categorías y Etiquetas: Estas entidades se migraron como colecciones independientes, ya que poseen 
+estructuras relativamente simples y autónomas. Su independencia facilita operaciones CRUD directas y consultas eficientes.
+- Posts: Los posts también se estructuraron como una colección independiente. En lugar de emplear claves foráneas, se 
+almacenan referencias directas (como el ID del autor o de la categoría) o, en algunos casos, se embeben datos relevantes 
+para evitar consultas adicionales.
+- Comentarios: Se evaluó la posibilidad de embebimiento de los comentarios dentro del documento del post, siempre que la cantidad de 
+comentarios por post fuera moderada. Esta técnica mejora considerablemente el rendimiento de lectura y la coherencia de los datos:
+{
+  "titulo": "Introducción a MongoDB",
+  "comentarios": [
+    {
+      "autor": "Ana López",
+      "mensaje": "Excelente explicación.",
+      "fecha": "2024-04-05"
+    }
+  ]
+}
+- PostsEtiquetados (relación N:M): En lugar de mantener una colección intermedia como en el modelo relacional, se optó por incluir
+un arreglo de etiquetas dentro de cada documento de post. Esta solución simplifica la estructura y mejora el acceso:
+{
+  "titulo": "Aprendiendo MongoDB",
+  "etiquetas": ["bases de datos", "NoSQL", "MongoDB"]
+}
+Justificación de la nueva estructura
+La elección de esta estructura se fundamenta en los siguientes criterios:
+
+- Eficiencia en lectura: MongoDB permite recuperar documentos completos en una sola operación, eliminando la necesidad de JOINs.
+- Flexibilidad del esquema: Al no requerir un esquema rígido, MongoDB se adapta fácilmente a cambios futuros en los requerimientos 
+del sistema.
+- Desempeño optimizado: Las operaciones CRUD se realizan con menor latencia al reducir la complejidad de las relaciones y al aprovechar
+el embebido de documentos.
+En conclusión, la migración a MongoDB permitió optimizar el rendimiento de la aplicación, simplificar la estructura de datos y mejorar 
+la escalabilidad del sistema, alineándose con los objetivos funcionales y técnicos del proyecto.
 
 
 
