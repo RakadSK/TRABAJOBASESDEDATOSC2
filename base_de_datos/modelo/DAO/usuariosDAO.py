@@ -2,7 +2,7 @@ from modelo.VO.usuariosVO import UsuariosVO
 from conexiondb import conectar_cliente
 
 
-class CategoriasDAO:
+class UsuariosDAO:
     def __init__(self):
         self.cliente = conectar_cliente()
         self.coleccion = self.cliente.BlocDB.usuarios

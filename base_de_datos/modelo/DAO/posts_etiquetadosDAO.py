@@ -2,7 +2,7 @@ from modelo.VO.posts_etiquetadosVO import PostEtiquetadosVO
 from conexiondb import conectar_cliente
 
 
-class CategoriasDAO:
+class Posts_EtiquetassDAO:
     def __init__(self):
         self.cliente = conectar_cliente()
         self.coleccion = self.cliente.BlocDB.posts_etiquetados

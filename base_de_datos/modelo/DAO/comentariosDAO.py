@@ -2,7 +2,7 @@ from modelo.VO.comentariosVO import ComentariosVO
 from conexiondb import conectar_cliente
 
 
-class CategoriasDAO:
+class ComentariosDAO:
     def __init__(self):
         self.cliente = conectar_cliente()
         self.coleccion = self.cliente.BlocDB.comentarios

@@ -10,7 +10,9 @@ def conectar_cliente():
     cliente = None
     try:
         cliente = MongoClient(conexion)
+        print("#################")
         print("Conexión exitosa")
+        print("/////////////////")
         # dbs = cliente.list_database_names()
         # print(dbs)
     except Exception as e:

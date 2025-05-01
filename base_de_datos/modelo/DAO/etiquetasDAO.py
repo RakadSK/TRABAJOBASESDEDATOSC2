@@ -2,7 +2,7 @@ from modelo.VO.etiquetasVO import EtiquetasVO
 from conexiondb import conectar_cliente
 
 
-class CategoriasDAO:
+class EtiquetasDAO:
     def __init__(self):
         self.cliente = conectar_cliente()
         self.coleccion = self.cliente.BlocDB.etiquetas

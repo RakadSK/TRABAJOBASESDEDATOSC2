@@ -1,86 +1,5 @@
-# from modelo.VO.categoriasVO import CategoriasVO
-# from conexiondb import conectar_cliente
-
-
-# class CategoriasDAO:
-#     def __init__(self):
-#         self.cliente = conectar_cliente()
-#         self.coleccion = self.cliente.BlocDB.categorias
-
-#     def insertar_categoria(self, categoria: CategoriasVO) -> bool:
-#         documento = {
-#             "id": categoria.id,
-#             "nombre_categoria": categoria.nombre_categoria
-#         }
-#         try:
-#             self.coleccion.insert_one(
-#                 documento)
-#             return True
-#         except:
-#             print("Error al Insertar Categoria")
-#             return False
-
-#     def leer_categoria(self):
-#         lista = []
-#         categoria = self.coleccion.find()
-
-#         for row in categoria:
-#             lista.append(row)
-
-#         return lista
-
-#     def buscar_categoria_id(self, id):
-#         lista = []
-#         categoria = self.coleccion.find_one({"id": id})
-#         lista.append(categoria["id"])
-#         lista.append(categoria["nombre_categoria"])
-
-#         return lista
-
-#     def actualizar_categoria(self, categoria: CategoriasVO):
-#         documento = {
-#             "$set": {
-#                 "nombre_categoria": categoria.nombre_categoria
-#             }
-#         }
-#         try:
-#             self.coleccion.update_one({"id": categoria.id},
-#                                       documento)
-#             return True
-#         except Exception as e:
-#             print("Error al insertar Categoria", e)
-#             return False
-
-#     def eliminar_categoria(self, id: int):
-#         try:
-#             self.coleccion.delete_one({"id": id})
-#             return True
-#         except Exception as e:
-#             print("Error al eliminar", e)
-#             return False
-
-
-# dao = CategoriasDAO()
-# print(dao.leer_categoria())
-
-
-# NOTA IMPORTANTE PARA MANJEAR LOS LEER
-#  for categoria in lista:
-# print(categoria["id"], categoria["nombre_categoria"])
-
-# NOTA IMPORTANTE PARA ACTUALIZAR/ELIMINAR
-# dao.actualizar_categoria(categoria=CategoriasVO(
-#   id=2, nombre_categoria="Papas"))
-
-
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QWidget, QVBoxLayout,
                              QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QLabel, QHBoxLayout)
-from modelo.VO.categoriasVO import CategoriasVO
-from modelo.DAO.categoriasDAO import CategoriasDAO
-from modelo.DAO.comentariosDAO import ComentariosDAO
-from modelo.DAO.etiquetasDAO import EtiquetasDAO
-from modelo.DAO.postsDAO import PostsDAO
-import sys
 
 
 class VistaPrincipal(QMainWindow):
@@ -92,11 +11,6 @@ class VistaPrincipal(QMainWindow):
         self.initUI()
 
     def initUI(self):
-
-        self.categorias_dao = CategoriasDAO()
-        self.comentarios_dao = ComentariosDAO()
-        self.etiquetas_dao = EtiquetasDAO()
-        self.posts_dao = PostsDAO()
 
         self.w1 = dict()
         self.w2 = dict()
@@ -246,7 +160,6 @@ class VistaPrincipal(QMainWindow):
 
         # |||||||||||||||||||||||||||||||||||||||||||||||||||
         """Usuarios"""
-        """Comentario"""
 
         self.w3['buscar_id_usuario_ipt'] = QLineEdit(self)
         self.w3['buscar_id_usuario_ipt'].setPlaceholderText(
@@ -265,14 +178,14 @@ class VistaPrincipal(QMainWindow):
             "correo-electronico")
 
         self.w3['crear_usuario_btn'] = QPushButton("Crear Usuario", self)
-        self.w3['actualizar_usuariobtn'] = QPushButton(
+        self.w3['actualizar_usuario_btn'] = QPushButton(
             "Actualizar Usuario", self)
         self.w3['buscar_id_usuario_btn'] = QPushButton(
-            "Buscar Comentario", self)
+            "Buscar Usuario", self)
         self.w3['borrar_usuario_btn'] = QPushButton(
-            "Borrar Comentario", self)
+            "Borrar Usuario", self)
         self.w3['leer_usuario_btn'] = QPushButton(
-            "Mostrar Comentarios", self)
+            "Mostrar Usuarios", self)
 
         self.w3['tabla_usuario'] = QTableWidget(self)
         self.w3['tabla_usuario'].setColumnCount(5)
@@ -301,35 +214,3 @@ class VistaPrincipal(QMainWindow):
         widget_principal = QWidget()
         widget_principal.setLayout(self.layout_main)
         self.setCentralWidget(widget_principal)
-
-    def handler_insertar_categoria(self):
-        category_name = self.w1['nombre_categoria_ipt'].text()
-        new_id = self.crear_nuevo_id()
-        new_category = CategoriasVO(id=new_id, nombre_categoria=category_name)
-        if self.categorias_dao.insertar_categoria(new_category):
-            print("Category inserted successfully.")
-            self.handler_leer_categorias()
-
-    def crear_nuevo_id(self):
-        categories = self.categorias_dao.leer_categoria()
-        if categories:
-            return max(category["id"] for category in categories) + 1
-        return 1
-
-    def handler_leer_categorias(self):
-        categorias = self.categorias_dao.leer_categoria()
-        self.w1['tabla_categoria'].setRowCount(0)
-        for categoria in categorias:
-            row = self.w1['tabla_categoria'].rowCount()
-            self.w1['tabla_categoria'].insertRow(row)
-            self.w1['tabla_categoria'].setItem(
-                row, 0, QTableWidgetItem(str(categoria["id"])))
-            self.w1['tabla_categoria'].setItem(
-                row, 1, QTableWidgetItem(categoria["nombre_categoria"]))
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = VistaPrincipal()
-    window.show()
-    sys.exit(app.exec_())
