@@ -1,7 +1,7 @@
 from modelo.DAO import categoriasDAO, comentariosDAO, etiquetasDAO, posts_etiquetadosDAO, postsDAO, usuariosDAO
 from modelo.VO import categoriasVO, comentariosVO, etiquetasVO, posts_etiquetadosVO, postsVO, usuariosVO
-from vista import vista
-from PyQt5.QtWidgets import QApplication, QTableWidgetItem
+from vista import vista, dashboard
+from PyQt5.QtWidgets import QApplication, QTableWidgetItem, QLabel
 import sys
 
 
@@ -10,6 +10,7 @@ class ControladorGUI:
 
         self.app = QApplication(sys.argv)
         self.ventana = vista.VistaPrincipal()
+        self.dashboard = dashboard.Dashboard()
 
         self.CAT_DAO = categoriasDAO.CategoriasDAO()
         self.COM_DAO = comentariosDAO.ComentariosDAO()
@@ -87,6 +88,10 @@ class ControladorGUI:
             self.handler_eliminar_post_etiquetado)
         self.ventana.w3['buscar_id_post_etiqueta_btn'].clicked.connect(
             self.handler_buscar_post_etiquetado)
+        self.ventana.w3['acc_dasboard_btn'].clicked.connect(
+            self.handler_dashboard)
+
+        # ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
     def handler_insertar_categoria(self):
         nombre_categoria = self.ventana.w1['nombre_categoria_ipt'].text()
@@ -405,6 +410,57 @@ class ControladorGUI:
         if lista:
             return max(item["id"] for item in lista) + 1
         return 1
+
+    def handler_dashboard(self):
+        self.contador_total("Posts", self.POS_DAO.leer_categoria())
+        self.contador_total("Comentarios", self.COM_DAO.leer_categoria())
+        self.contador_total("Usuarios", self.USU_DAO.leer_categoria())
+
+        self.graficar_posts_por_categoria()
+        self.graficar_etiquetas_mas_usadas()
+
+        self.dashboard.show()
+
+    def contador_total(self, titulo, datos):
+        total = len(datos)
+        label = QLabel(f"<b>{titulo}:</b> {total}")
+        self.dashboard.info_layout.addWidget(label)
+
+    def graficar_posts_por_categoria(self):
+        categorias = self.CAT_DAO.leer_categoria()
+        posts = self.POS_DAO.leer_categoria()
+
+        conteo = {cat["nombre_categoria"]: 0 for cat in categorias}
+        for post in posts:
+            for cat in categorias:
+                if post["categoria_id"] == cat["id"]:
+                    conteo[cat["nombre_categoria"]] += 1
+
+        ejes = self.dashboard.figura.add_subplot(121)
+        ejes.clear()
+        ejes.bar(conteo.keys(), conteo.values(), color='skyblue')
+        ejes.set_title("Cantidad de Posts por Categoría")
+        ejes.set_xlabel("Categoría")
+        ejes.set_ylabel("Cantidad de Posts")
+        ejes.tick_params(axis='x', rotation=45)
+
+    def graficar_etiquetas_mas_usadas(self):
+        etiquetas = self.ETI_DAO.leer_categoria()
+        posts_etiquetados = self.POS_ETI_DAO.leer_categoria()
+
+        conteo_etiquetas = {et["nombre_etiqueta"]: 0 for et in etiquetas}
+        for post_et in posts_etiquetados:
+            for et in etiquetas:
+                if post_et["etiqueta_id"] == et["id"]:
+                    conteo_etiquetas[et["nombre_etiqueta"]] += 1
+
+        ejes = self.dashboard.figura.add_subplot(122)
+        ejes.clear()
+        etiquetas = list(conteo_etiquetas.keys())
+        valores = list(conteo_etiquetas.values())
+        ejes.pie(valores, labels=etiquetas,
+                 autopct='%1.1f%%', startangle=140)
+        ejes.set_title("Etiquetas más usadas")
 
     def mainloop(self):
         self.ventana.show()

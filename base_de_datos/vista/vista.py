@@ -15,6 +15,7 @@ class VistaPrincipal(QMainWindow):
         self.w1 = dict()
         self.w2 = dict()
         self.w3 = dict()
+
         # ||||||||||||||||||||||||||||||||||||||||||||||||||||
         """Categoria"""
 
@@ -192,6 +193,7 @@ class VistaPrincipal(QMainWindow):
         self.w3['tabla_usuario'].setHorizontalHeaderLabels(
             ["ID", "Login", "PWD", "Apodo", "email"])
         self.w3['tabla_usuario'].setFixedSize(600, 200)
+        self.w3['acc_dasboard_btn'] = QPushButton("Dashboard", self)
 
         self.layout_main = QHBoxLayout()
         self.layout_categoria_comentario = QVBoxLayout()
