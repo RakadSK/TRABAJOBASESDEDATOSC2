@@ -26,6 +26,8 @@ class CategoriasDAO:
 
         for row in categoria:
             lista.append(row)
+        
+        print("categorias: ", lista)
 
         return lista
 
@@ -61,8 +63,7 @@ class CategoriasDAO:
 
 
 dao = CategoriasDAO()
-dao.insertar_categoria(categoria=CategoriasVO(
-    id=2, nombre_categoria="Tecnologia"))
+dao.leer_categoria()
 
 
 # NOTA IMPORTANTE PARA MANJEAR LOS LEER

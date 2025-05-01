@@ -10,4 +10,4 @@ class PostsVO:
     contenido: Optional[str] = None
     estatus: Optional[str] = None
     usuario_id: Optional[int] = None
-    categoria_id: Optional[int]
+    categoria_id: Optional[int] = None
